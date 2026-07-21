@@ -230,9 +230,8 @@ pipeline {
 
 You must manually create this file in your Gitea repository. It is a text file that defines your pipeline logic (stages, steps, agents) and must be committed to your source code.
 
-How to Create It
-In Gitea UI:
-Navigate to your repository.
+How to Create It -> In Gitea UI: -> Navigate to your repository.
+```
 Click Add File > New File.
 Name the file exactly Jenkinsfile (case-sensitive).
 Paste your pipeline code (like the example provided earlier).
@@ -241,7 +240,7 @@ Via Command Line:
 # Clone your repo
 git clone https://gitea.example.com/username/repo.git
 cd repo
-
+```
 # Create the file
 nano Jenkinsfile
 # (Paste your pipeline code here and save)
