@@ -32,49 +32,51 @@ To mimic the GitHub Actions model (where runners are created for a single job an
 ### 1. Prepare the Agent Machine (Commands)
 Run these commands on the new agent machine (e.g., Ubuntu) to install Java, create a user, and set up SSH access.
 
-Install Java (Required): Jenkins agents require Java. Match the version to your controller (usually Java 11 or 17).
-
+- Install Java (Required): Jenkins agents require Java. Match the version to your controller (usually Java 11 or 17).
+```
 sudo apt update
 sudo apt install openjdk-17-jre-headless -y
 java -version # Verify installation
-
-Create a Jenkins User (Optional but Recommended):
-
+```
+- Create a Jenkins User (Optional but Recommended):
+```
 sudo useradd -m -s /bin/bash jenkins
 sudo passwd jenkins # Set a password
-
+```
 Setup SSH Keys: You need to allow the Jenkins Controller to SSH into this machine without a password. Option A: If you already have a public key from the Controller:
 
-# On the AGENT machine
+##### On the AGENT machine
+```
 sudo mkdir -p /home/jenkins/.ssh
 echo "PASTE_CONTROLLER_PUBLIC_KEY_HERE" | sudo tee -a /home/jenkins/.ssh/authorized_keys
 sudo chown -R jenkins:jenkins /home/jenkins/.ssh
 sudo chmod 700 /home/jenkins/.ssh
 sudo chmod 600 /home/jenkins/.ssh/authorized_keys
-
-Option B: Generate a new key pair on the Controller and copy it:
-
+```
+#### Option B: Generate a new key pair on the Controller and copy it:
+```
 # On the CONTROLLER machine
 ssh-keygen -t rsa -b 4096 -f jenkins_agent_key
 # Copy the public key to the agent
 ssh-copy-id -i jenkins_agent_key.pub jenkins@<AGENT_IP_ADDRESS>
-
+```
 Install Build Tools: Since this is a persistent agent, install tools globally:
-
+```
 sudo apt install git docker.io maven nodejs -y
 sudo usermod -aG docker jenkins # Allow jenkins user to run docker
-
+```
 
 ### 2. Configure Jenkins Controller (UI Steps)
 No commands are needed here; perform these steps in the Jenkins web interface.
 
 ##### Add Credentials:
-Go to Manage Jenkins > Credentials > (Global) > Add Credentials.
+`Go to Manage Jenkins > Credentials > (Global) > Add Credentials.`
+```
 Kind: SSH Username with private key.
 Username: jenkins (or the user created in Step 1).
 Private Key: Paste the private key content (from jenkins_agent_key if you generated one in Option B above) or select "From the Jenkins master ~/.ssh".
 ID: agent-ssh-key. Click Create.
-
+```
 ##### Install the Plugin:
 Go to Manage Jenkins > Plugins (or Manage Plugins).
 Click the Available plugins tab.
@@ -82,7 +84,8 @@ Search for `SSH Build Agents.`
 Check the box and click Install.
 
 
-Create the Node:
+- Create the Node:
+```
 Go to Manage Jenkins > Nodes > New Node.
 Node name: ubuntu-runner-01.
 Select Permanent Agent > Create.
@@ -95,8 +98,8 @@ Host: <AGENT_IP_ADDRESS>.
 Credentials: Select agent-ssh-key.
 Host Key Verification: Non verifying Verification Strategy (for quick setup).
 Click Save.
-
-Jenkins node configuration SSH launch
+```
+- Jenkins node configuration SSH launch
 
 View all
 3. Verify Connection
@@ -109,7 +112,7 @@ ssh -i <path_to_private_key> jenkins@<AGENT_IP_ADDRESS>
 
 4. Usage in Pipeline
 Use the label defined in Step 3 in your Jenkinsfile:
-
+```Jenkinsfile
 pipeline {
     agent { label 'ubuntu-self-hosted' }
     stages {
@@ -121,7 +124,7 @@ pipeline {
         }
     }
 }
-
+```
 ---
 
 #### To set up a Jenkins pipeline with source code hosted on Gitea, follow these steps to install the plugin, configure credentials, and create the pipeline
