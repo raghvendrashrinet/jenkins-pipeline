@@ -176,7 +176,7 @@ You have two options depending on your needs:
 
 ##### Option A: Multibranch Pipeline (Recommended)
 Automatically discovers branches and creates jobs for those containing a Jenkinsfile.
-
+```
 Click New Item > Enter name (e.g., my-app) > Select Multibranch Pipeline > OK. 
 Branch Sources:
 Click Add source > Gitea.
@@ -185,11 +185,11 @@ Owner: Your Gitea username or organization name.
 Credentials: Select gitea-token.
 Discover branches: Ensure "All branches" is selected.
 Click Save. Jenkins will scan Gitea and build any branch with a Jenkinsfile. 
-
+```
 
 ##### Option B: Standard Pipeline
 For a single specific branch/repository.
-
+```
 Click New Item > Enter name > Select Pipeline > OK. 
 Pipeline section:
 Definition: Pipeline script from SCM.
@@ -200,6 +200,29 @@ Branch Specifier: */main (or your branch name).
 Build Triggers:
 Check Poll SCM (leave schedule empty) OR rely on the webhook configured in Step 4. 
 Click Save.
+```
+#### manual pipeline script execution namde deploy on added agent
+
+Pipeline Script
+```
+pipeline {
+    agent {
+        label 'stapp01'
+    }
+    stages {
+        stage('Deploy') {
+            steps {
+                sh '''
+                    cd /var/www/html
+                    git pull origin main || git pull origin master
+                '''
+            }
+        }
+    }
+}
+```
+
+Test > Build Now 
 
 ##### 6. Verify Webhook
 If you enabled "Manage Hooks" in Step 4, Jenkins automatically created the webhook.
@@ -228,7 +251,7 @@ pipeline {
 }
 ```
 
-You must manually create this file in your Gitea repository. It is a text file that defines your pipeline logic (stages, steps, agents) and must be committed to your source code.
+You must manually create this file in your Gitea repository. It is a text file that defines your pipeline logic (stages, steps, agents) and must be committed to your source code.   
 
 How to Create It -> In Gitea UI: -> Navigate to your repository.
 ```
