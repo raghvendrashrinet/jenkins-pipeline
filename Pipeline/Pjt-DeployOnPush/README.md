@@ -101,24 +101,29 @@ git add Jenkinsfile
 git commit -m "Add deployment Jenkinsfile"
 git push origin master
 ```
-#### Step 7: Create and Configure the Jenkins Pipeline Job
+### Step 7: Create and Configure the Jenkins Pipeline Job
+
 - Go to Jenkins Dashboard > New Item.
-- Enter the Item Name: devops-app-deployment.
-- Select Pipeline and click OK.
+- Enter the Item Name: `devops-app-deployment`.
+- Select **Pipeline** and click **OK**.
 
-Build Triggers:
- - Check Poll SCM.
- - Set Schedule to * * * * * (checks for new pushes every minute).
+**Build Triggers:**
+- Check **Poll SCM**.
+- Set Schedule to `* * * * *` (checks for new pushes every minute).
 
-Pipeline Section:
- - Definition: Pipeline script from SCM
- - SCM: Git
- - Repository URL: [https://3000-port-bzdfjydvhhy7hmh3.labs.kodekloud.com/sarah/web.git](https://3000-port-bzdfjydvhhy7hmh3.labs.kodekloud.com/sarah/web.git)
- - Credentials: Select your Gitea token or user credentials if private.
- - Branch Specifier: */master
- - Script Path: Jenkinsfile
+![Trigger Configuration](trigger_snap.png)
 
-Click Save.
+**Pipeline Section:**
+- Definition: **Pipeline script from SCM**
+- SCM: **Git**
+- Repository URL: `https://3000-port-bzdfjydvhhy7hmh3.labs.kodekloud.com/sarah/web.git`
+- Credentials: Select your Gitea token or user credentials if private.
+- Branch Specifier: `*/master`
+- Script Path: `Jenkinsfile`
+
+![Pipeline Configuration](pipeline_snap.png)
+
+Click **Save**.
 
 #### Step 8: Verify Auto Trigger & Deployment
 Make a code change in your repo and push to master:
