@@ -1,0 +1,12 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Deploy') {
+            steps {
+                // Deploys files to App Server 1 (/var/www/html)
+                sh 'scp -o StrictHostKeyChecking=no -r * sarah@stapp01:/var/www/html/'
+            }
+        }
+    }
+}
